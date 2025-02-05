@@ -3,15 +3,14 @@
 
 use core::panic::PanicInfo;
 use lazy_static::lazy_static;
-use x86_64::structures::idt::InterruptDescriptorTable;
-use OliveOS::{exit_qemu, QemuExitCode, serial_println};
-use x86_64::structures::idt::InterruptStackFrame;
+use x86_64::structures::idt::{InterruptDescriptorTable, InterruptStackFrame};
+use OliveOS::{exit_qemu, QemuExitCode, serial_println, serial_print};
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
     serial_print!("stack_overflow::stack_overflow...\t");
 
-    blog_os::gdt::init();
+    OliveOS::gdt::init();
     init_test_idt();
     stack_overflow();
 
@@ -30,7 +29,7 @@ lazy_static! {
         unsafe {
             idt.double_fault
                 .set_handler_fn(test_double_fault_handler)
-                .set_stack_index(blog_os::gdt::DOUBLE_FAULT_IST_INDEX);
+                .set_stack_index(OliveOS::gdt::DOUBLE_FAULT_IST_INDEX);
         }
 
         idt
