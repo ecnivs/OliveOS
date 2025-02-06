@@ -3,7 +3,6 @@
 #![feature(custom_test_frameworks)]
 #![test_runner(OliveOS::test_runner)]
 #![reexport_test_harness_main = "test_main"]
-#![feature(abi_x86_interrupt)]
 
 use core::panic::PanicInfo;
 use OliveOS::println;
@@ -13,12 +12,6 @@ pub extern "C" fn _start() -> ! {
     println!("Hello World{}", "!");
 
     OliveOS::init();
-
-    fn stack_overflow() {
-        stack_overflow();
-    }
-
-    stack_overflow();
 
     x86_64::instructions::interrupts::int3();
     #[cfg(test)]
